@@ -183,7 +183,9 @@ Page({
       //   audioContext.pause()
       // })
       audioContext.onEnded(() => {
+        // 如果是单曲循环,不需要切换
         if (this.data.playMode === PlayModeEnum.Repeat) return
+        // 其它模式进行歌曲切换
         this.changeNewSong()
       })
     }
