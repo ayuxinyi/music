@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "video-item": "/components/video-item/index"
+  },
+  "navigationBarTitleText": "推荐视频",
+  "onReachBottomDistance": 80,
+  "enablePullDownRefresh": true
+}

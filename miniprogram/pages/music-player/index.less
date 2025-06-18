@@ -1,0 +1,153 @@
+/* pages/music-player/index.wxss */
+
+
+.bg-image,
+.bg-cover {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.bg-cover {
+  background-color: rgba(0, 0, 0, .3);
+  backdrop-filter: blur(20px);
+}
+
+.tabs {
+  display: flex;
+  font-size: 28rpx;
+  color: #ccc;
+
+  .divider {
+    margin: 0 8rpx;
+  }
+
+  .active {
+    color: #fff;
+    font-weight: 700;
+  }
+}
+
+.swiper {
+  .swiper-item {
+    color: #fff;
+    font-size: 28rpx;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 40rpx 60rpx;
+    box-sizing: border-box;
+
+    .album {
+      flex: 1;
+
+      .image {
+        width: 100%;
+        border-radius: 12rpx;
+      }
+    }
+
+    .info {
+      .name {
+        font-size: 48rpx;
+        font-weight: 700;
+      }
+
+      .singer {
+        margin-top: 10rpx;
+        font-size: 26rpx;
+        color: #eee;
+      }
+    }
+
+    .lyric {
+      margin: 16rpx 0;
+      text-align: center;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .progress {
+      margin: 12rpx 0;
+
+      .slider {
+        margin: 16rpx 8rpx 10rpx 12rpx;
+      }
+
+      .time {
+        display: flex;
+        justify-content: space-between;
+        font-size: 24rpx;
+      }
+    }
+
+    .controls {
+      margin: 12rpx 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .btn {
+        width: 60rpx;
+        height: 60rpx;
+
+        &.mode {
+          width: 80rpx;
+          height: 80rpx;
+        }
+
+        &.play {
+          width: 120rpx;
+          height: 120rpx;
+        }
+      }
+    }
+  }
+
+  // 歌词样式
+  .lyric-list {
+
+    font-size: 28rpx;
+    text-align: center;
+    height: 100%;
+    padding: 30rpx;
+    box-sizing: border-box;
+
+    .item {
+      height: 40px;
+      line-height: 40px;
+      color: #ccc;
+
+      // background: #ccc -webkit-linear-gradient(left, #fff, #fff) no-repeat 0 0;
+      // -webkit-text-fill-color: transparent;
+      // -webkit-background-clip: text;
+      // background-size: 0 100%;
+
+      &.active {
+        // background-size: 100% 100%;
+        // animation: scan 5s linear;
+        color: #0f0;
+        font-size: 32rpx;
+        font-weight: 700;
+      }
+    }
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}
+
+@keyframes scan {
+  0% {
+    background-size: 0 100%;
+  }
+
+  100% {
+    background-size: 100% 100%;
+  }
+}

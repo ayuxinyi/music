@@ -1,0 +1,13 @@
+<!--components/rank-song-item/index.wxml-->
+<view class="item"  bind:tap="onSongPlay">
+  <view class="index">
+    {{index}}
+  </view>
+  <view class="info">
+    <view class="name">{{song.name}}</view>
+    <view class="source">
+      <image class="icon" src="/assets/images/icons/sq_icon.png" mode="widthFix" />
+      <text>{{song.ar[0].name}}</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,36 @@
+/* components/nav-bar/index.wxss */
+// 导航栏
+.nav-bar {
+  .nav {
+    display: flex;
+    // 固定高度,不管什么屏幕
+    height: 44px;
+    color: #fff;
+
+    &-left,
+    &-right,
+    &-center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &-left,
+    &-right {
+      width: 120rpx;
+    }
+
+    &-center {
+      flex: 1;
+    }
+
+    .default {
+      display: none;
+    }
+
+    .slot:empty+.default {
+      display: block;
+    }
+
+  }
+}

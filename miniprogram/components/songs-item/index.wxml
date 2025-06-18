@@ -1,0 +1,10 @@
+<view class="song" bind:tap="onSongPlay">
+  <image lazy-load="{{true}}" class="image" src="{{song.al.picUrl}}" mode="widthFix" />
+  <view class="content">
+    <view class="name">{{song.name}}</view>
+    <view class="source">{{song.ar[0].name}}</view>
+  </view>
+  <view class="arrow">
+    <van-icon name="arrow" color="#999" size="16px" />
+  </view>
+</view>

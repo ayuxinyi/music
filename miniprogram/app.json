@@ -1,0 +1,45 @@
+{
+  "pages": [
+    "pages/main-music/index",
+    "pages/main-video/index",
+    "pages/detail-video/index",
+    "pages/detail-search/index",
+    "pages/detail-songs/index",
+    "pages/detail-menu/index",
+    "pages/music-player/index"
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "天天音乐",
+    "backgroundTextStyle": "dark",
+    "navigationStyle": "default"
+  },
+  "tabBar": {
+    "list": [
+      {
+        "text": "音乐",
+        "pagePath": "pages/main-music/index",
+        "iconPath": "assets/images/tabbar/music_normal.png",
+        "selectedIconPath": "assets/images/tabbar/music_active.png"
+      },
+      {
+        "text": "视频",
+        "pagePath": "pages/main-video/index",
+        "iconPath": "assets/images/tabbar/video_normal.png",
+        "selectedIconPath": "assets/images/tabbar/video_active.png"
+      }
+    ]
+  },
+  "rendererOptions": {
+    "skyline": {
+      "defaultDisplayBlock": true,
+      "disableABTest": true,
+      "sdkVersionBegin": "3.0.0",
+      "sdkVersionEnd": "15.255.255"
+    }
+  },
+  "componentFramework": "glass-easel",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

@@ -1,0 +1,10 @@
+{
+  "usingComponents": {
+    "van-search": "@vant/weapp/search/index",
+    "section-header": "/components/section-header/index",
+    "songs-item": "/components/songs-item/index",
+    "menu-area": "/components/menu-area/index",
+    "ranking-item": "/components/ranking-item/index"
+  },
+  "navigationBarBackgroundColor": "#fafafa"
+}

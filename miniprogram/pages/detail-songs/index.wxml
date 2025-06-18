@@ -1,0 +1,9 @@
+<song-header class="header" songInfo="{{songInfos}}" wx:if="{{type === 'album' && songInfos.name}}" />
+<view wx:else class="title">
+  {{songInfos.name}}
+</view>
+<view class="song-list">
+  <block wx:for="{{songInfos.tracks}}" wx:key="id">
+    <rank-song-item song="{{item}}" index="{{index+1}}" bind:tap="onSongTap" />
+  </block>
+</view>

@@ -1,0 +1,20 @@
+<!--pages/detail-video/index.wxml-->
+<wxs src="/utils/formate.wxs" module="format" />
+<video class="vidoe" referrer-policy="origin" src="{{url}}" autoplay></video>
+
+<scroll-view class="content" scroll-y show-scrollbar="{{false}}">
+  <view class="info">
+    <view class="title">{{mvInfo.artistName}}</view>
+    <view class="desc">{{mvInfo.name}}</view>
+    <view class="other">
+      <text class="play-count">{{format.formateCount(mvInfo.playCount)}}次播放 - </text>
+      <text class="publish-time">{{mvInfo.publishTime}}</text>
+    </view>
+  </view>
+  <view class="recommend">
+    <view class="title">推荐视频</view>
+    <block wx:for="{{relatedMv}}" wx:key="vid">
+      <related-video video="{{item}}" />
+    </block>
+  </view>
+</scroll-view>
