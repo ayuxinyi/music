@@ -1,5 +1,6 @@
 <!--pages/main-music/index.wxml-->
 <!--搜索框-->
+
 <van-search readonly shape="round" background="#fafafa" bind:click-input="onSearchClick" placeholder="请输入搜索关键词" />
 
 <!--轮播图-->
@@ -32,5 +33,23 @@
     <block wx:for="{{rankingInfos}}" wx:key="id">
       <ranking-item rank="{{item}}" key="{{index}}" />
     </block>
+  </view>
+</view>
+
+<!--播放工具栏-->
+<view class="play-bar-placeholder" wx:if="{{currentSong.name}}"></view>
+<view class="play-bar" style="display:{{!currentSong.name?'none':'flex'}}">
+  <view class="left">
+    <image class="album album-anim" style="animation-play-state: {{isPlayIng?'running':'paused'}};" src="{{currentSong.al.picUrl}}" mode="" bind:tap="onBindAlbumTap" />
+    <view class="name">{{currentSong.name}}</view>
+  </view>
+  <view class="right">
+    <!--播放工具栏
+    <image class="play" src="/assets/images/music/{{isPlayIng?'pause':'play'}}_icon.png" mode="" bind:tap="onPlayMusicStaus" />-->
+    <view class="icons" bind:tap="onPlayMusicStaus">
+      <canvas id="canvas" type="2d" style="width: 26px;height:26px;"></canvas>
+      <image class="plays" src="/assets/images/music/{{isPlayIng?'paused':'play'}}.svg" mode="" />
+    </view>
+    <image class="icon" src="/assets/images/music/playlist_icon.png" mode="" />
   </view>
 </view>

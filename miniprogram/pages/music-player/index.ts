@@ -1,12 +1,13 @@
-import { ISong } from "../../services/modules/home/models/home.model"
+import type { ISong } from "../../services/modules/home/models/home.model"
 import type { IMusic } from "../../services/modules/player/models/player.model"
-import { getSongInfo, getSongLyric } from "../../services/modules/player/player.service"
-import playerStore from "../../stores/playerStore"
-import { ILyricInfo, parseLyric } from "../../utils/parse-lyric"
+import type { IPlayerInfo } from "../../stores/playerStore"
+import playerStore, { audioContext, PlayModeEnum } from "../../stores/playerStore"
+import type { ILyricInfo } from "../../utils/parse-lyric"
 import throttle from "../../utils/throttle"
 
 Page({
   data: {
+    stateKeys: ["id", "currentSong", "lyric", "duration", "currentTime", "currentLyricText", "currentLyricIndex", "isPlayIng", "playModeName"],
     id: '',
     currentSong: <IMusic>{},
     lyric: <ILyricInfo[]>[],
@@ -23,15 +24,37 @@ Page({
     isSuccesPlay: false,
     // 播放模式
     playMode: <PlayModeEnum>0,
-    playModeName: "order"
+    playModeName: "order",
+    // 当前播放时间
+    currentTime: 0,
+    // 总时长
+    duration: 0,
+    // 是否正在播放
+    isPlayIng: true,
+    // 页面相关
+    currentPage: 0,
+    contentHeight: 603,
+    pageTitles: ["歌曲", "歌词"],
+    sliderValue: 0,
+    // 是否正在滑动
+    isSliderChanging: false,
+    // 歌词动画时长
+    textTime: 0,
+    // 歌词滚动距离
+    lyricScrollTop: 0,
   },
   onLoad({ id }: { id?: string } = {}) {
-    // 获取播放歌曲列表
+    // 监听store中歌曲列表的变化
     playerStore.onStates(["playSongList", "playSongIndex"], this.handleSongInfosStore())
+    // 监听store中歌曲信息的改变,重新给data中的数据进行赋值,更改界面
+    playerStore.onStates(this.data.stateKeys, this.getPlayerInfos())
     // 获取屏幕高度,设置轮播图高度
     const app = getApp<IAppOption>()
     this.setData({ contentHeight: app.globalData.contentHeight })
-    this.setUpPlaySong(id!)
+    // 调用store中的action播放歌曲
+    if (id) {
+      playerStore.dispatch("playMusicWidthIdAction", id)
+    }
   },
   onSwiperChange(event: WechatMiniprogram.SwiperChange) {
     const currentPage = event.detail.current
@@ -66,22 +89,15 @@ Page({
     this.data.isSliderChanging = true
   }, 100),
   // 更新进度
-  updateProgress() {
-    const { currentTime, duration } = this.data
-    const sliderValue = currentTime / duration * 100
+  updateProgress(currentTime: number) {
+    if (this.data.isSliderChanging) return
+    const sliderValue = currentTime / this.data.duration * 100
     // 记录当前的播放时间,修改滑块的进度
-    this.setData({ sliderValue, currentTime: audioContext.currentTime * 1000 })
+    this.setData({ sliderValue, currentTime })
   },
   // 播放/暂停按钮监听
   onPlayTap() {
-    if (!this.data.isSuccesPlay) return
-    const { isPlayIng } = this.data
-    if (!audioContext.paused) {
-      audioContext.pause()
-    } else {
-      audioContext.play()
-    }
-    this.setData({ isPlayIng: !isPlayIng })
+    playerStore.dispatch("playMusicStateAction")
   },
   // store共享数据监听回调
   handleSongInfosStore() {
@@ -97,45 +113,57 @@ Page({
       }
     }
   },
-  changeNewSong(isNext = true) {
-    // 获取歌曲相关数据
-    let { playSongIndex, playSongList, playMode } = this.data
-    // 计算最新的索引
-    // 根据播放模式计算索引
-    switch (playMode) {
-      // 单曲播放
-      case PlayModeEnum.Repeat:
-      // 顺序播放
-      case PlayModeEnum.Order:
-        isNext ? playSongIndex++ : playSongIndex--
-        if (playSongIndex < 0) playSongIndex = playSongList.length - 1
-        if (playSongIndex >= playSongList.length) playSongIndex = 0
-        break
-      // 随机播放
-      case PlayModeEnum.Random:
-        playSongIndex = Math.floor(Math.random() * playSongList.length)
-        break
+  getPlayerInfos() {
+    // 监听store中的state的变化,根据最新的值改变data中的数据
+    return ({ id, currentSong, duration, currentTime, currentLyricIndex, currentLyricText, lyric, isPlayIng, playModeName }: Partial<IPlayerInfo> = {}) => {
+      if (id !== undefined) {
+        this.setData({ id })
+      }
+      if (currentSong) {
+        this.setData({ currentSong })
+      }
+      if (currentLyricText) {
+        this.setData({ currentLyricText })
+      }
+      if (isPlayIng !== undefined) {
+        // 更改按钮图片
+        this.setData({ isPlayIng })
+      }
+      if (playModeName) {
+        // 更改模式图片
+
+        this.setData({ playModeName })
+      }
+      if (lyric) {
+        this.setData({ lyric })
+      }
+      if (duration !== undefined) {
+        this.setData({ duration })
+      }
+      if (currentTime !== undefined) {
+        // 根据当前时间改变进度条进度
+        this.updateProgress(currentTime)
+      }
+      if (currentLyricIndex !== undefined) {
+        // 修改歌词滚动距离
+        this.setData({ currentLyricIndex, lyricScrollTop: 40 * currentLyricIndex })
+      }
     }
   },
   // 上一首点击
   onPrevTap() {
-    this.changeNewSong(false)
+    playerStore.dispatch("changeCurrentMusicPlayAction", false)
   },
   // 下一首点击
   onNextTap() {
-    this.changeNewSong()
+    playerStore.dispatch("changeCurrentMusicPlayAction")
   },
   // 模式切换
   onModeTap() {
-    // 计算新的模式
-    let { playMode } = this.data
-    playMode++
-    if (playMode === 3) playMode = 0
-    audioContext.loop = playMode === PlayModeEnum.Repeat
-    // 保存模式
-    this.setData({ playMode, playModeName: modeNames[playMode] })
+    playerStore.dispatch("changeMusicPlayModeAction")
   },
   onUnload() {
     playerStore.offStates(["playSongList", "playSongIndex"], this.handleSongInfosStore())
+    playerStore.offStates(this.data.stateKeys, this.getPlayerInfos())
   }
 })
